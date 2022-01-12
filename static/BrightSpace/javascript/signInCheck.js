@@ -6,10 +6,13 @@ document.getElementById("sign_in").addEventListener("submit",
         let repeatPassword = element.get("repeatPassword")
         if (password != repeatPassword) {
             alert("Please enter the same password")
-            //location.reload()
             event.preventDefault()
+        } else if (password.length < 6 || password.length > 16) {
+            alert("Password should be at least 6 characters and at most 16 characters")
+            event.preventDefault()
+            ceventDefault()
         } else {
-            /* check username availability*/
+            /*check username availability*/
             let res = false
             let xhr = new XMLHttpRequest()
             xhr.open("Get", `checkAvailability/${element.get("userName")}`, false)
@@ -20,7 +23,6 @@ document.getElementById("sign_in").addEventListener("submit",
             }
             xhr.onload = () => {
                 if (xhr.status == 200) {
-                    console.log(xhr.responseText)
                     let json = JSON.parse(xhr.responseText)
                     console.log(json.result)
                     if (JSON.parse(json)["isAvailable"]) {
@@ -35,9 +37,8 @@ document.getElementById("sign_in").addEventListener("submit",
             }
             xhr.send()
             if (!res) {
-
                 event.preventDefault()
             }
-            alert("s")
         }
+
     })

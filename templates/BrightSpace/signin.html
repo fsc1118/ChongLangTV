@@ -5,12 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-{% load static %}
-<form action="" method="post" id="sign_in">
+
+<form action="/createUser" method="post" id="sign_in">
     {% csrf_token %}
     {{ form }}
+
     <input type="submit" value="Submit">
 </form>
+{% load static %}
 <script src="{% static "signInCheck.js" %}"></script>
 </body>
 </html>

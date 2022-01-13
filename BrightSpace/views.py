@@ -1,67 +1,72 @@
 import json
 
-from django.contrib.auth.hashers import make_password
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
+from django.contrib.auth.hashers import make_password, check_password
+from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse, HttpResponse
 # Create your views here.
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 
-from . import form
 from .models import User
-
-
-def homePage(request: HttpRequest):
-    print("asad")
-    if request.COOKIES.__contains__("username"):
-        tempfile = loader.get_template("BrightSpace/Homepage.html")
-        return HttpResponse(tempfile.render(request=request))
-    else:
-        tempfile = loader.get_template("BrightSpace/login.html")
-        context = {"form": form.LoginForm}
-        return HttpResponse(tempfile.render(request=request, context=context))
-
-
-@csrf_exempt
-def checkAvailability(request: HttpRequest, name: str):
-    isExist = False
-    try:
-        res = User.objects.get(username=name)
-    except User.DoesNotExist:
-        isExist = True
-    print(isExist)
-    jsonBody = {"isAvailable": isExist}
-    return JsonResponse(json.dumps(jsonBody), safe=False)
 
 
 def signin(request: HttpRequest):
     tempfile = loader.get_template("BrightSpace/signin.html")
-    context = {"form": form.SigninForm}
-    return HttpResponse(tempfile.render(request=request, context=context))
+    return HttpResponse(tempfile.render(request=request))
 
 
-def createUser(request: HttpRequest):
-    print("creat user")
+@csrf_exempt
+def checkAvailability(request: HttpRequest):
     if request.method != "POST":
         return HttpResponseBadRequest()
-    data = form.SigninForm(request.POST)
-    if data.is_valid():
-        userName = data.cleaned_data["userName"]
-        password = data.cleaned_data["password"]
-        print(userName + " " + password)
-        newUser = User()
-        newUser.username = userName
-        newUser.password = make_password(password)
-        newUser.save()
-        res = HttpResponseRedirect("/")
-        res.set_cookie("username", userName)
-        return res
-    else:
+    data = request.body.decode("utf-8")
+    json_data = json.loads(data)
+    if "name" not in json_data:
         return HttpResponseBadRequest()
+    name = json_data["name"]
+    canBeUsed = False
+    try:
+        res = User.objects.get(username=name)
+    except User.DoesNotExist:
+        canBeUsed = True
+    print(canBeUsed)
+    resultantJson = json.dumps({"status": 200, "statusText": "OK", "canBeUsed": canBeUsed})
+    return HttpResponse(resultantJson, content_type="application/json")
 
 
-# def signinPage(requst: HttpRequest):
+@csrf_exempt
+def checkLogin(request: HttpRequest):
+    if request.method != "POST":
+        return HttpResponseBadRequest()
+    body_unicode = request.body.decode('utf-8')
+    json_data = json.loads(body_unicode)
+    if "username" not in json_data or "password" not in json_data:
+        return HttpResponseBadRequest
+    username = json_data["username"]
+    password = json_data["password"]
+    resultant_json = {"status": 200, "statusText": "OK", "isPasswordMatch": True, "isUsernameExist": True}
+    try:
+        res = User.objects.get(username=username)
+        realPassword = res.password
+        if check_password(password, realPassword):
+            return JsonResponse(resultant_json)
+        else:
+            resultant_json["isPasswordMatch": False]
+            return JsonResponse(resultant_json)
+    except User.DoesNotExist:
+        resultant_json["isUsernameExist": False]
+        return JsonResponse(resultant_json)
 
 
-def loginPage(request: HttpRequest):
-    tempfile = loader.get_template("BrightSpace/login.html")
-    return HttpResponse(tempfile.render(request=request))
+@csrf_exempt
+def createUser(request: HttpRequest):
+    if request.method != "POST":
+        return HttpResponseBadRequest()
+    data = request.body.decode("utf-8")
+    json_data = json.loads(data)
+    if "username" not in json_data or "password" not in json_data:
+        return HttpResponseBadRequest()
+    name = json_data["username"]
+    password = json_data["password"]
+    newUser = User(name, make_password(password))
+    newUser.save()
+    return JsonResponse(json.dumps({"status": 200, "statusText": "OK"}))

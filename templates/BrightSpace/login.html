@@ -5,11 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-<form action="" method="post">
+<form action="checkLogin" method="post" id="login">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit">
     Do not have an account? <a href="signin">Sign in</a>
+
+    {% load static %}
+    <script src="{% static "BrightSpace/javascript/logInCheck.js" %}"></script>
 </form>
 </body>
 </html>

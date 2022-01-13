@@ -14,18 +14,38 @@ document.getElementById("sign_in").addEventListener("submit",
                 let result = await fetch("checkAvailability", {
                     method: "POST",
                     body: JSON.stringify({
-                        "name": element.get("username"),
+                        "name": username,
                         "password": element.get("password")
                     })
                 })
-                let json = await result.json()
-                if (json["status"] === 200 && json["statusText"] === "OK") {
-                    if (json["canBeUsed"] === true) {
-                        alert("ok")
+                result = await result.json()
+                if (result["status"] === 200 && result["statusText"] === "OK") {
+                    if (result["canBeUsed"] === true) {
+                        let createUser = async () => {
+                            result = await fetch("createUser", {
+                                method: "POST",
+                                body: JSON.stringify(
+                                    {
+                                        username: username,
+                                        password: password
+                                    }
+                                )
+                            })
+                            let res = await result.json()
+                  
+                            if (res["status"] === 200 && res["statusText"] === "OK") {
+                                alert("create successful")
+                            } else {
+                                throw new Error()
+                            }
+                        }
+                        createUser().catch((error) => {
+                            alert(error)
+                            location.reload()
+                        })
                     } else {
                         alert("This username has been used")
                     }
-
                 } else {
                     throw new Error()
                 }
@@ -34,5 +54,4 @@ document.getElementById("sign_in").addEventListener("submit",
                 location.reload()
             })
         }
-
     })

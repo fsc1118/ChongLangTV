@@ -6,8 +6,10 @@
 </head>
 <body>
 <form action="checkLogin" method="post" id="login">
-    {% csrf_token %}
-    {{ form }}
+    <label>Username:</label>
+    <input type="text" name="username">
+    <label>Password:</label>
+    <input type="password" name="password">
     <input type="submit" value="Submit">
     Do not have an account? <a href="signin">Sign in</a>
 

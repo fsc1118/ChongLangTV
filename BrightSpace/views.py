@@ -14,6 +14,11 @@ def signin(request: HttpRequest):
     return HttpResponse(tempfile.render(request=request))
 
 
+def login(request: HttpRequest):
+    tempfile = loader.get_template("BrightSpace/login.html")
+    return HttpResponse(tempfile.render(request=request))
+
+
 @csrf_exempt
 def checkAvailability(request: HttpRequest):
     if request.method != "POST":
@@ -25,12 +30,11 @@ def checkAvailability(request: HttpRequest):
     name = json_data["name"]
     canBeUsed = False
     try:
-        res = User.objects.get(username=name)
+        User.objects.get(username=name)
     except User.DoesNotExist:
         canBeUsed = True
-    print(canBeUsed)
-    resultantJson = json.dumps({"status": 200, "statusText": "OK", "canBeUsed": canBeUsed})
-    return HttpResponse(resultantJson, content_type="application/json")
+    resultantJson = {"status": 200, "statusText": "OK", "canBeUsed": canBeUsed}
+    return JsonResponse(resultantJson)
 
 
 @csrf_exempt
@@ -40,7 +44,7 @@ def checkLogin(request: HttpRequest):
     body_unicode = request.body.decode('utf-8')
     json_data = json.loads(body_unicode)
     if "username" not in json_data or "password" not in json_data:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
     username = json_data["username"]
     password = json_data["password"]
     resultant_json = {"status": 200, "statusText": "OK", "isPasswordMatch": True, "isUsernameExist": True}
@@ -48,12 +52,12 @@ def checkLogin(request: HttpRequest):
         res = User.objects.get(username=username)
         realPassword = res.password
         if check_password(password, realPassword):
-            return JsonResponse(resultant_json)
+            return JsonResponse(resultant_json, safe=False)
         else:
-            resultant_json["isPasswordMatch": False]
-            return JsonResponse(resultant_json)
+            resultant_json["isPasswordMatch"] = False
+            return JsonResponse(resultant_json, safe=False)
     except User.DoesNotExist:
-        resultant_json["isUsernameExist": False]
+        resultant_json["isUsernameExist"] = False
         return JsonResponse(resultant_json)
 
 
@@ -67,6 +71,6 @@ def createUser(request: HttpRequest):
         return HttpResponseBadRequest()
     name = json_data["username"]
     password = json_data["password"]
-    newUser = User(name, make_password(password))
+    newUser = User(username=name, password=make_password(password))
     newUser.save()
-    return JsonResponse(json.dumps({"status": 200, "statusText": "OK"}))
+    return JsonResponse({"status": 200, "statusText": "OK"})

@@ -5,20 +5,19 @@ from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from ChongLangTV.models import User
-from .util.CheckUserNameAvailability import isUsernameExist
+from ChongLangTV.services.util.CheckUserNameAvailability import isUsernameExist
 
 
 @csrf_exempt
-def changePassword(request: HttpRequest):
+def signin(request: HttpRequest):
     if request.method != "POST":
         return HttpResponseBadRequest()
     requestBody = json.loads(request.body)
     userName = requestBody["userName"]
     password = requestBody["password"]
     if isUsernameExist(userName=userName):
-        user = User.objects.get(username=userName)
-        user.password = make_password(password=password)
-        user.save()
-        return JsonResponse({"success": True}, status=200)
-    else:
         return JsonResponse({"success": False}, status=200)
+    else:
+        newUser = User(username=userName, password=make_password(password))
+        newUser.save()
+        return JsonResponse({"success": True}, status=200)

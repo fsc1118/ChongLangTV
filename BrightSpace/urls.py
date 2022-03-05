@@ -1,11 +1,9 @@
 from django.urls import path
 
-from . import views
+from .services import LoginService, SigninService, ChangePasswordService
 
 urlpatterns = [
-    path('signin', views.signin),
-    path('login', views.login),
-    path('createUser', views.createUser),
-    path('checkLogin', views.checkLogin),
-    path('checkAvailability', views.checkAvailability)
+    path('signin', SigninService.signin),
+    path('login', LoginService.login),
+    path('changePassword', ChangePasswordService.changePassword)
 ]

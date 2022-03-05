@@ -3,7 +3,7 @@ import json
 from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from BrightSpace.services.util.CheckUserNamePasswordMatch import isMatch
+from ChongLangTV.services.util.CheckUserNamePasswordMatch import isMatch
 
 
 @csrf_exempt

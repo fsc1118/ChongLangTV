@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from BrightSpace.models import User
+from ChongLangTV.models import User
 from .util.CheckUserNameAvailability import isUsernameExist
 
 

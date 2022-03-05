@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import check_password
 
-from BrightSpace.models import User
+from ChongLangTV.models import User
 from .CheckUserNameAvailability import isUsernameExist
 
 

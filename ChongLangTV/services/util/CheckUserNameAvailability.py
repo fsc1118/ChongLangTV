@@ -1,4 +1,4 @@
-from BrightSpace.models import User
+from ChongLangTV.models import User
 
 
 def isUsernameExist(userName: str):

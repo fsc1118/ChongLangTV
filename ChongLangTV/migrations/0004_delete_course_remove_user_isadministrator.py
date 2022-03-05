@@ -4,9 +4,8 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('BrightSpace', '0003_course_coursename_user_isadministrator_user_password_and_more'),
+        ('ChongLangTV', '0003_course_coursename_user_isadministrator_user_password_and_more'),
     ]
 
     operations = [

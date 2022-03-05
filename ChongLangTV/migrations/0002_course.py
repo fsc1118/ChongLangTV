@@ -4,9 +4,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('BrightSpace', '0001_initial'),
+        ('ChongLangTV', '0001_initial'),
     ]
 
     operations = [

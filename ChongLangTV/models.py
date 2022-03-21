@@ -31,11 +31,11 @@ class ReplyOfPosts(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.CharField(max_length=1024, default="")
     repliedDate = models.DateTimeField(auto_now_add=True)
-    repliedDaterUsername = models.ForeignKey(User, on_delete=models.CASCADE)
+    repliedUsername = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class ReplyOfReply(models.Model):
     repliedPost = models.ForeignKey(ReplyOfPosts, on_delete=models.CASCADE)
     content = models.CharField(max_length=1024, default="")
     repliedDate = models.DateTimeField(auto_now_add=True)
-    repliedDaterUsername = models.ForeignKey(User, on_delete=models.CASCADE)
+    repliedUsername = models.ForeignKey(User, on_delete=models.CASCADE)

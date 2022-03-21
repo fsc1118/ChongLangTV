@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('ChongLangTV', '0006_remove_post_postid_remove_replyofposts_replyid_and_more'),
     ]
@@ -12,7 +11,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='replyofposts',
-            name='post',
+            name='Post',
         ),
         migrations.RemoveField(
             model_name='replyofposts',

@@ -16,4 +16,5 @@ def login(request: HttpRequest):
     if isMatch(userName=userName, password=password):
         return JsonResponse({"success": True}, status=200)
     else:
+        request.session["userName"] = userName
         return JsonResponse({"success": False}, status=200)

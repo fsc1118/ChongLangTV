@@ -9,7 +9,7 @@ from ChongLangTV.services.util.CheckUserNameAvailability import isUsernameExist
 def viewFriends(request: HttpRequest):
     if request.method != "GET":
         return HttpResponseBadRequest()
-    userName = "abcd"
+    userName = request.session.get("userName", None)
     if userName is not None and isUsernameExist(userName=userName):
         list1 = UserUserFriendRelationship.objects.filter(userName1=userName)
         list2 = UserUserFriendRelationship.objects.filter(userName2=userName)

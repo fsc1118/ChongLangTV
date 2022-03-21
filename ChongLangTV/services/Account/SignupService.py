@@ -9,7 +9,7 @@ from ChongLangTV.services.util.CheckUserNameAvailability import isUsernameExist
 
 
 @csrf_exempt
-def signin(request: HttpRequest):
+def signup(request: HttpRequest):
     if request.method != "POST":
         return HttpResponseBadRequest()
     requestBody = json.loads(request.body)
@@ -20,4 +20,5 @@ def signin(request: HttpRequest):
     else:
         newUser = User(username=userName, password=make_password(password))
         newUser.save()
+        request.session["userName"] = userName
         return JsonResponse({"success": True}, status=200)

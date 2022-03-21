@@ -1,15 +1,14 @@
 from django.urls import path
 
-from .services.Account import ChangePasswordService, LoginService, SigninService
-from .services.Friend import SendFriendRequestServiceService, \
-    GetFriendRequestReceivedService, AcceptFriendRequestService, ViewFriendService
+from .services.Account import ChangePasswordService, LoginService, SignupService
+from .services.Friend import ViewFriendService, FriendRequestService
+from .services.Post import PostService
 
 urlpatterns = [
-    path('signin', SigninService.signin),
+    path('signup', SignupService.signup),
     path('login', LoginService.login),
-    path('changePassword', ChangePasswordService.changePassword),
-    path('f', SendFriendRequestServiceService.sendFriendRequest),
-    path('getRequests', GetFriendRequestReceivedService.getFriendRequestReceived),
-    path('a', AcceptFriendRequestService.acceptFriendRequestReceived),
-    path('v', ViewFriendService.viewFriends)
+    path('password', ChangePasswordService.changePassword),
+    path('request', FriendRequestService.friendRequestService),
+    path('friend', ViewFriendService.viewFriends),
+    path('post', PostService.postService)
 ]
